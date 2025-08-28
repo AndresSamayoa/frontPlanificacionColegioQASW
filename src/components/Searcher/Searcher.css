@@ -1,0 +1,39 @@
+.SearcherContainer {
+  width: 75%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 4%;
+}
+
+.SearcherInput {
+  width: 80%;
+  height: 36px;
+  border: solid;
+  border-color: gray;
+  border-width: 2px;
+  border-radius: 8px;
+}
+
+.SearcherBtn {
+  background-color: #0d6efd;
+  margin-left: 4px;
+  min-width: 15%;
+  height: 36px;
+  padding: 0 1%;
+  font-size: 1rem;
+  border: 0;
+  border-radius: 16px;
+  cursor:pointer;
+}
+
+.CancelSearchBtn {
+  background-color: red;
+  margin-left: 4px;
+  width: 15%;
+  height: 36px;
+  font-size: 1rem;
+  border: 0;
+  border-radius: 16px;
+  cursor:pointer;
+}
