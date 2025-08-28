@@ -1,0 +1,88 @@
+
+.dTable {
+  width: fit-content;
+  max-width: 75%;
+  max-height: 350px;
+  overflow: scroll;
+  display: block
+}
+
+.dTableWide {
+  /* width: fit-content; */
+  min-width: 75%;
+}
+
+.dTableHeader {
+  display: flex;
+  flex-direction: row;
+  min-width: 100%;
+  width: fit-content;
+  background-color: #3F82DB;
+  color: #000000;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  padding: 0;
+}
+
+.dTableHeaderItems {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  word-wrap: break-word;
+  word-break: break-all;
+  border: solid;
+  border-width: 1px;
+  min-width: 100px;
+  max-width: 500px;
+  flex-basis: 100%;
+}
+
+.dTableHeaderStartItem {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 0px;
+}
+
+.dTableHeaderEndItem {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 16px;
+}
+
+.dTableRows {
+  display: flex;
+  flex-direction: row;
+  min-width: 100%;
+  width: fit-content;
+  color: #000000;
+  padding: 0;
+}
+
+.dTableRowItems {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-wrap: break-word;
+  word-break: break-all;
+  text-align: center;
+  border: solid;
+  min-width: 100px;
+  max-width: 500px;
+  border-width: 1px;
+  flex-basis: 100%;
+}
+
+.dTableRow0Screen {
+  background-color: #EAFBCC;
+}
+
+.dTableRow1Screen {
+  background-color: #8ED1BF;
+}
+
+.dTableRow0Print {
+  background-color: #FFFFFF;
+}
+
+.dTableRow1Print {
+  background-color: #D4D4D4;
+}
