@@ -1,9 +1,9 @@
 import "./LoginScreen.css";
 
 import { useState } from "react";
-import axios from "axios";
 
 import LoginForm from "../../components/forms/LoginForm/LoginForm";
+import HttpPetition from "../../helpers/HttpPetition";
 
 const base_url = process.env.REACT_APP_NODE_API_BASE;
 
@@ -33,7 +33,7 @@ export default function LoginScreen() {
         return;
       }
 
-      const response = await axios({
+      const response = await HttpPetition({
         url: base_url + "/api/login",
         method: "POST",
         data: {
