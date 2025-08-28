@@ -1,0 +1,26 @@
+
+.TableModalComponent {
+  width: 100%;
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modalDiv {
+  width: 100%;
+  margin: 0;
+}
+
+.closeIcon {
+  font-size: 10vh;
+  cursor: pointer;
+}
+
+.closeModalDiv {
+  width: 100%;
+  height: 10vh;
+  display: flex;
+  flex-direction: row-reverse;
+  color: red;
+}
