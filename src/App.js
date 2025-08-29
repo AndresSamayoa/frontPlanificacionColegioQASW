@@ -1,12 +1,13 @@
 import logo from './logo.svg';
 import './App.css';
-import LoginScreen from './screens/Login/LoginScreen';
+import LoginScreen from './screens/Login/LoginScreen.js';
 
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Routes, Route } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 
 const Header = lazy(() => import('./components/Header/Header.js'));
+const UsersScreen = lazy(() => import('./screens/Users/UsersScreen.js'));
 
 function App() {
   console.log(localStorage.getItem('token'));
@@ -17,10 +18,8 @@ function App() {
       <Header />
       <Suspense fallback={<div class="loading">Loading&#8230;</div>}>
       <Routes>
-        <Route path='user/crud'/>
-      </Routes>
-      </Suspense>
-      <div className="App">
+        <Route path='user/crud' element={<UsersScreen />}/>
+        <Route path='/' element={<div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <p>
@@ -35,7 +34,9 @@ function App() {
             Learn React
           </a>
         </header>
-      </div>
+      </div>}/>
+      </Routes>
+      </Suspense>
     </>);
   } else {
     return <LoginScreen />
