@@ -8,6 +8,9 @@ import { lazy, Suspense } from 'react';
 
 const Header = lazy(() => import('./components/Header/Header.js'));
 const UsersScreen = lazy(() => import('./screens/Users/UsersScreen.js'));
+const ResourcesScreen = lazy(() => import('./screens/Resources/ResourcesScreen.js'));
+const SchoolYears = lazy(() => import('./screens/SchoolYears/SchoolYearsScreen.js'));
+const EvaluationsScreen = lazy(() => import('./screens/Evaluations/EvaluationsScreen.js'));
 
 function App() {
   console.log(localStorage.getItem('token'));
@@ -19,6 +22,9 @@ function App() {
       <Suspense fallback={<div class="loading">Loading&#8230;</div>}>
       <Routes>
         <Route path='user/crud' element={<UsersScreen />}/>
+        <Route path='resource/crud' element={<ResourcesScreen />}/>
+        <Route path='schoolYear/crud' element={<SchoolYears />}/>
+        <Route path='evaluation/crud' element={<EvaluationsScreen />}/>
         <Route path='/' element={<div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
