@@ -27,10 +27,12 @@ export default function UsersScreen() {
     setPassword("");
     setActive(false);
     setAdmin(false);
+    setUserList([]);
     setMensaje("");
   };
 
   const cerrarModalTabla = () => {
+    setUserList([]);
     setIsTableModalOpen(false);
   }
 
@@ -42,10 +44,10 @@ export default function UsersScreen() {
 
       if (userId > 0) {
           method = 'PUT';
-          url = base_url + '/api/users/'+userId
+          url = base_url + '/api/v1/users/'+userId
       } else {
           method = 'POST';
-          url = base_url + '/api/users'
+          url = base_url + '/api/v1/users'
       }
 
       if (userId == 0 && (!user || user.trim().length < 1)) {
@@ -59,6 +61,8 @@ export default function UsersScreen() {
       }
       if (userId == 0 && (!phone || phone.length < 1)) {
         errores.push("El telefono es un campo obligatorio.");
+      } else if (userId == 0 && (phone.length > 8)) {
+        errores.push("El telefono solo debe tener 8 caracteres.");
       }
       if (userId == 0 &&(active == null)) {
         errores.push("Debe seleccionar si el usuario esta activo o no.");
@@ -87,11 +91,9 @@ export default function UsersScreen() {
         validateStatus: () => true,
       });
 
-      if (response.status == 200 && response.data.status) {
+      if (response.status == 200) {
         cancelForm();
-        localStorage.setItem('token', response.data.data.token);
-        window.location.reload();
-        setMensaje("Bienvenido");
+        setMensaje("Exito al guardar el usuario");
       } else {
         setMensaje(
           `No se pudo iniciar sesión, codigo: ${response.status}${
@@ -107,12 +109,12 @@ export default function UsersScreen() {
   const deleteItem = async (userId, param, setMessageParam) => {
     try {
       const response = await HttpPetition({
-        url: base_url + '/api/usuarios/' + userId,
+        url: base_url + '/api/v1/users/' + userId,
         method: 'DELETE',
         validateStatus: () => true
       });
 
-      if (response.status == 200 && response.data.status) {
+      if (response.status == 200) {
         cancelForm();
         setMessageParam('Exito al eliminar');
         await getData(param, setMessageParam);
@@ -127,18 +129,15 @@ export default function UsersScreen() {
   const getData = async (param, setMessageParam) => {
     try {
       const response = await HttpPetition({
-        url: base_url+'/api/usuarios/buscar',
+        url: base_url+'/api/v1/users/search/'+param,
         method: 'GET',
-        params: {
-            parametro: param,
-        },
         validateStatus: () => true,
         timeout: 30000
       });
 
-      if (response.status == 200 && response.data.status) {
+      if (response.status == 200) {
         const data = [];
-        for (const user of response.data.data) {
+        for (const user of response.data) {
           data.push({
             id: user.usuario_id,
             name: user.nombres,

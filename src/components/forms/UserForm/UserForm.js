@@ -9,7 +9,10 @@ export default function userForm(props) {
         props.setNames(e.target.value)
     };
     const setPhone = (e) => {
-        props.setPhone(e.target.value ? e.target.value.replace(/[^0-9]/gm,'') : e.target.value)
+        const value = e.target.value ? e.target.value.replace(/[^0-9]/gm,'') : e.target.value;
+        if (value.length <= 8) {
+            props.setPhone(e.target.value ? e.target.value.replace(/[^0-9]/gm,'') : e.target.value);
+        }
     };
     const setPassword = (e) => {
         props.setPassword(e.target.value)

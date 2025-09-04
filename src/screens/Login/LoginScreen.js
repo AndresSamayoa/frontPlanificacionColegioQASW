@@ -34,7 +34,7 @@ export default function LoginScreen() {
       }
 
       const response = await HttpPetition({
-        url: base_url + "/api/login",
+        url: base_url + "/api/v1/login",
         method: "POST",
         data: {
           user: user.trim(),
@@ -43,9 +43,10 @@ export default function LoginScreen() {
         validateStatus: () => true,
       });
 
-      if (response.status == 200 && response.data.status) {
+      if (response.status == 200) {
         cancelarForm();
-        localStorage.setItem('token', response.data.data.token);
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('userId', response.data.userId);
         window.location.reload();
         setMensaje("Bienvenido");
       } else {
