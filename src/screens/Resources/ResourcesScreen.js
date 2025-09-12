@@ -19,6 +19,7 @@ export default function ResourcesScreen() {
     setResourceId(0);
     setName("");
     setMensaje('')
+    setResourceList([])
     console.log("Limpio");
   };
 
@@ -34,10 +35,10 @@ export default function ResourcesScreen() {
 
       if (resourceId > 0) {
           method = 'PUT';
-          url = base_url + '/api/resources/'+resourceId
+          url = base_url + '/api/v1/recurso/'+resourceId
       } else {
           method = 'POST';
-          url = base_url + '/api/resources'
+          url = base_url + '/api/v1/recurso'
       }
 
       if (resourceId == 0 && (!name || name.trim().length < 1)) {
@@ -54,16 +55,14 @@ export default function ResourcesScreen() {
         url: url,
         method: method,
         data: {
-          name: name ? name.trim() : null,
+          recursonombre: name ? name.trim() : null,
         },
         validateStatus: () => true,
       });
 
-      if (response.status == 200 && response.data.status) {
+      if (response.status == 200) {
         cancelForm();
-        localStorage.setItem('token', response.data.data.token);
-        window.location.reload();
-        setMensaje("Bienvenido");
+        setMensaje("Exito al guardar el recurso");
       } else {
         setMensaje(
           `No se pudo guardar el recurso, codigo: ${response.status}${
@@ -79,12 +78,12 @@ export default function ResourcesScreen() {
   const deleteItem = async (resourceId, param, setMessageParam) => {
     try {
       const response = await HttpPetition({
-        url: base_url + '/api/resources/' + resourceId,
+        url: base_url + '/api/v1/recurso/' + resourceId,
         method: 'DELETE',
         validateStatus: () => true
       });
 
-      if (response.status == 200 && response.data.status) {
+      if (response.status == 200) {
         cancelForm();
         setMessageParam('Exito al eliminar');
         await getData(param, setMessageParam);
@@ -99,32 +98,30 @@ export default function ResourcesScreen() {
   const getData = async (param, setMessageParam) => {
     try {
       const response = await HttpPetition({
-        url: base_url+'/api/resources/buscar',
+        url: base_url+'/api/v1/recurso/search/'+param,
         method: 'GET',
-        params: {
-            parametro: param,
-        },
         validateStatus: () => true,
         timeout: 30000
       });
 
-      if (response.status == 200 && response.data.status) {
+      if (response.status == 200) {
+        console.log(response)
         const data = [];
-        for (const resource of response.data.data) {
+        for (const resource of response.data) {
           data.push({
             id: resource.recurso_id,
-            name: resource.nombre,
+            name: resource.re_nombre,
             acciones: <div className='ActionContainer'>
                 <i 
                   onClick={()=>{
-                    setResourceId(resource.recurso_id);
-                    setName(resource.nombre);
+                    setResourceId(resource.re_recurso_id);
+                    setName(resource.re_nombre);
                     setIsTableModalOpen(false);
                   }} 
                   class="bi bi-pencil-square ActionItem"
                 ></i>
                 <i
-                  onClick={()=>deleteItem(resource.recurso_id, param, setMessageParam)} 
+                  onClick={()=>deleteItem(resource.re_recurso_id, param, setMessageParam)} 
                   style={{color:"red"}} 
                   class="bi bi-trash ActionItem"
                 ></i>

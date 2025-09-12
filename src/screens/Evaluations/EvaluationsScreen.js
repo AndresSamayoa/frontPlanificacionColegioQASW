@@ -17,8 +17,9 @@ export default function EvaluationsScreen() {
 
   const cancelForm = () => {
     setEvaluationId(0);
-    setName("");
-    setMensaje('')
+    setName('');
+    setMensaje('');
+    setEvaluationList([])
     console.log("Limpio");
   };
 
@@ -34,10 +35,10 @@ export default function EvaluationsScreen() {
 
       if (resourceId > 0) {
           method = 'PUT';
-          url = base_url + '/api/resources/'+resourceId
+          url = base_url + '/api/v1/evaluacion/'+resourceId
       } else {
           method = 'POST';
-          url = base_url + '/api/resources'
+          url = base_url + '/api/v1/evaluacion'
       }
 
       if (resourceId == 0 && (!name || name.trim().length < 1)) {
@@ -54,16 +55,14 @@ export default function EvaluationsScreen() {
         url: url,
         method: method,
         data: {
-          name: name ? name.trim() : null,
+          nombreevaluacion: name ? name.trim() : null,
         },
         validateStatus: () => true,
       });
 
-      if (response.status == 200 && response.data.status) {
+      if (response.status == 200) {
         cancelForm();
-        localStorage.setItem('token', response.data.data.token);
-        window.location.reload();
-        setMensaje("Bienvenido");
+        setMensaje("Exito al guardar");
       } else {
         setMensaje(
           `No se pudo guardar la evaluación, codigo: ${response.status}${
@@ -79,12 +78,12 @@ export default function EvaluationsScreen() {
   const deleteItem = async (resourceId, param, setMessageParam) => {
     try {
       const response = await HttpPetition({
-        url: base_url + '/api/resources/' + resourceId,
+        url: base_url + '/api/v1/evaluacion/' + resourceId,
         method: 'DELETE',
         validateStatus: () => true
       });
 
-      if (response.status == 200 && response.data.status) {
+      if (response.status == 200) {
         cancelForm();
         setMessageParam('Exito al eliminar');
         await getData(param, setMessageParam);
@@ -99,32 +98,30 @@ export default function EvaluationsScreen() {
   const getData = async (param, setMessageParam) => {
     try {
       const response = await HttpPetition({
-        url: base_url+'/api/resources/buscar',
+        url: base_url+'/api/v1/evaluacion/search/'+param,
         method: 'GET',
-        params: {
-            parametro: param,
-        },
         validateStatus: () => true,
         timeout: 30000
       });
 
-      if (response.status == 200 && response.data.status) {
+      if (response.status == 200) {
         const data = [];
-        for (const resource of response.data.data) {
+        for (const resource of response.data) {
+          console.log(response.data)
           data.push({
-            id: resource.evaluacion_id,
-            name: resource.nombre,
+            id: resource.ev_evaluacion_id,
+            name: resource.ev_nombre,
             acciones: <div className='ActionContainer'>
                 <i 
                   onClick={()=>{
-                    setEvaluationId(resource.evaluacion_id);
-                    setName(resource.nombre);
+                    setEvaluationId(resource.ev_evaluacion_id);
+                    setName(resource.ev_nombre);
                     setIsTableModalOpen(false);
                   }} 
                   class="bi bi-pencil-square ActionItem"
                 ></i>
                 <i
-                  onClick={()=>deleteItem(resource.evaluacion_id, param, setMessageParam)} 
+                  onClick={()=>deleteItem(resource.ev_evaluacion_id, param, setMessageParam)} 
                   style={{color:"red"}} 
                   class="bi bi-trash ActionItem"
                 ></i>

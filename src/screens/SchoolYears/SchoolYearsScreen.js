@@ -17,8 +17,9 @@ export default function SchoolYearsScreen() {
 
   const cancelForm = () => {
     setSchoolYearId(0);
-    setName("");
-    setMensaje('')
+    setName('');
+    setMensaje('');
+    setSchoolYearList([]);
     console.log("Limpio");
   };
 
@@ -34,10 +35,10 @@ export default function SchoolYearsScreen() {
 
       if (schoolYearId > 0) {
           method = 'PUT';
-          url = base_url + '/api/schoolYears/'+schoolYearId
+          url = base_url + '/api/v1/grado/'+schoolYearId
       } else {
           method = 'POST';
-          url = base_url + '/api/schoolYears'
+          url = base_url + '/api/v1/grado'
       }
 
       if (schoolYearId == 0 && (!name || name.trim().length < 1)) {
@@ -54,16 +55,14 @@ export default function SchoolYearsScreen() {
         url: url,
         method: method,
         data: {
-          name: name ? name.trim() : null,
+          gradonombre: name ? name.trim() : null,
         },
         validateStatus: () => true,
       });
 
-      if (response.status == 200 && response.data.status) {
+      if (response.status == 200) {
         cancelForm();
-        localStorage.setItem('token', response.data.data.token);
-        window.location.reload();
-        setMensaje("Bienvenido");
+        setMensaje("Exito al guardar");
       } else {
         setMensaje(
           `No se pudo guardar el grado, codigo: ${response.status}${
@@ -79,12 +78,12 @@ export default function SchoolYearsScreen() {
   const deleteItem = async (schoolYearId, param, setMessageParam) => {
     try {
       const response = await HttpPetition({
-        url: base_url + '/api/schoolYears/' + schoolYearId,
+        url: base_url + '/api/v1/grado/' + schoolYearId,
         method: 'DELETE',
         validateStatus: () => true
       });
 
-      if (response.status == 200 && response.data.status) {
+      if (response.status == 200) {
         cancelForm();
         setMessageParam('Exito al eliminar');
         await getData(param, setMessageParam);
@@ -99,32 +98,30 @@ export default function SchoolYearsScreen() {
   const getData = async (param, setMessageParam) => {
     try {
       const response = await HttpPetition({
-        url: base_url+'/api/schoolYears/buscar',
+        url: base_url+'/api/v1/grado/search/'+param,
         method: 'GET',
-        params: {
-            parametro: param,
-        },
         validateStatus: () => true,
         timeout: 30000
       });
 
-      if (response.status == 200 && response.data.status) {
+      if (response.status == 200) {
         const data = [];
-        for (const schoolYear of response.data.data) {
+        for (const schoolYear of response.data) {
+          console.log(response.data)
           data.push({
-            id: schoolYear.grado_id,
-            name: schoolYear.nombre,
+            id: schoolYear.gr_grado_id,
+            name: schoolYear.gr_nombre,
             acciones: <div className='ActionContainer'>
                 <i 
                   onClick={()=>{
-                    setSchoolYearId(schoolYear.grado_id);
-                    setName(schoolYear.nombre);
+                    setSchoolYearId(schoolYear.gr_grado_id);
+                    setName(schoolYear.gr_nombre);
                     setIsTableModalOpen(false);
                   }} 
                   class="bi bi-pencil-square ActionItem"
                 ></i>
                 <i
-                  onClick={()=>deleteItem(schoolYear.grado_id, param, setMessageParam)} 
+                  onClick={()=>deleteItem(schoolYear.gr_grado_id, param, setMessageParam)} 
                   style={{color:"red"}} 
                   class="bi bi-trash ActionItem"
                 ></i>
