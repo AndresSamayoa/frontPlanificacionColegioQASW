@@ -8,8 +8,10 @@ import Searcher from '../../components/Searcher/Searcher';
 export default function TableModal (props) {
     let guardar_funcion = () => props.buscarData(buscador, setMensaje);
 
-    if (props.dates) {
+    if (props.dates && !props.param) {
         guardar_funcion = () => props.buscarData(startDate, endDate, setMensaje);
+    } else if (props.dates && props.param) {
+        guardar_funcion = () => props.buscarData(buscador, startDate, endDate, setMensaje);
     }
 
     const [buscador, setBuscador] = useState('');
@@ -26,13 +28,14 @@ export default function TableModal (props) {
     }
 
     return <div className='TableModalComponent'>
-        <div className='closeModalDiv'>
+        {!props.notModal && <div className='closeModalDiv'>
             <i onClick={cerrarModal} class="bi bi-x closeIcon" />
-        </div>
+        </div>}
         <Searcher 
             placeHolder={props.placeHolder}
 
             dates={props.dates}
+            searcher={props.param}
 
             param={buscador}
             startDate={startDate}

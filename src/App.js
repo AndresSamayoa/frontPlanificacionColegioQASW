@@ -15,6 +15,7 @@ const CiclesScreen = lazy(() => import('./screens/Cicles/CiclesScreen.js'));
 const CoursesScreen = lazy(() => import('./screens/Courses/CoursesScreen.js'));
 const AssignationsScreen = lazy(() => import('./screens/Assignations/AssignationsScreen.js'));
 const RolsScreen = lazy(() => import('./screens/Rols/RolsScreen.js'));
+const SchedualsScreen = lazy(() => import('./screens/Scheduals/SchedualsScreen.js'));
 
 function App() {
   console.log(localStorage.getItem('token'));
@@ -33,6 +34,7 @@ function App() {
         <Route path='course/crud' element={<CoursesScreen />}/>
         <Route path='assignation/crud' element={<AssignationsScreen />}/>
         <Route path='rol/crud' element={<RolsScreen />}/>
+        <Route path='schedual/crud' element={<SchedualsScreen />}/>
         <Route path='/' element={<div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
