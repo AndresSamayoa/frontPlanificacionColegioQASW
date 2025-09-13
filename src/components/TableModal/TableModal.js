@@ -6,8 +6,15 @@ import DataTable from '../../components/DataTable/DataTable';
 import Searcher from '../../components/Searcher/Searcher';
 
 export default function TableModal (props) {
+    let guardar_funcion = () => props.buscarData(buscador, setMensaje);
+
+    if (props.dates) {
+        guardar_funcion = () => props.buscarData(startDate, endDate, setMensaje);
+    }
 
     const [buscador, setBuscador] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
     const [mensaje, setMensaje] = useState('');
 
     const cerrarModal = () => {
@@ -25,10 +32,16 @@ export default function TableModal (props) {
         <Searcher 
             placeHolder={props.placeHolder}
 
-            param={buscador}
-            setParam={setBuscador}
+            dates={props.dates}
 
-            searchFn={() => props.buscarData(buscador, setMensaje)}
+            param={buscador}
+            startDate={startDate}
+            endDate={endDate}
+            setParam={setBuscador}
+            setStartDateParam={setStartDate}
+            setEndDateParam={setEndDate}
+
+            searchFn={guardar_funcion}
             cancelFn={clearTableData}
         />
         <p>{mensaje}</p>

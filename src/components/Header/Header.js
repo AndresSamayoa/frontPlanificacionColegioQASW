@@ -12,6 +12,7 @@ export default function Header () {
             <Link to='/resource/crud' className='headerLink'><b>Recursos</b></Link>
             <Link to='/schoolYear/crud' className='headerLink'><b>Grados</b></Link>
             <Link to='/evaluation/crud' className='headerLink'><b>Evaluaciónes</b></Link>
+            <Link to='/cicle/crud' className='headerLink'><b>Bloques</b></Link>
         </div>
     </div>
 }
