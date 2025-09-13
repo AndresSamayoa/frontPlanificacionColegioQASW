@@ -1,0 +1,29 @@
+
+.RolScreen {
+    width: 100%;
+    min-height: 100vh;
+    background: #30C4FC;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.TitleContainer {
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+}
+
+.openModal {
+  margin-top: 16px;
+  margin-left: 4px;
+  cursor: pointer;
+}
+
+.ActionContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}

@@ -13,7 +13,9 @@ export default function Header () {
             <Link to='/schoolYear/crud' className='headerLink'><b>Grados</b></Link>
             <Link to='/evaluation/crud' className='headerLink'><b>Evaluaciónes</b></Link>
             <Link to='/cicle/crud' className='headerLink'><b>Bloques</b></Link>
-            <Link to='/cpurse/crud' className='headerLink'><b>Cursos</b></Link>
+            <Link to='/course/crud' className='headerLink'><b>Cursos</b></Link>
+            <Link to='/assignation/crud' className='headerLink'><b>Asignaciones</b></Link>
+            <Link to='/rol/crud' className='headerLink'><b>Roles</b></Link>
         </div>
     </div>
 }
