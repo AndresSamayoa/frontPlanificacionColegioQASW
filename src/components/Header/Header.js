@@ -17,6 +17,7 @@ export default function Header () {
             <Link to='/assignation/crud' className='headerLink'><b>Asignaciones</b></Link>
             <Link to='/rol/crud' className='headerLink'><b>Roles</b></Link>
             <Link to='/schedual/crud' className='headerLink'><b>Horarios</b></Link>
+            <Link to='/planification/crud' className='headerLink'><b>Planificaciónes</b></Link>
         </div>
     </div>
 }

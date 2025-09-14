@@ -7,11 +7,15 @@ export default function DataTable(props) {
         {(() => {
             const headers = [];
             const rows = [];
-            for (let i = 0; i < props.headers.length; i++) {
-                const header = props.headers[i];
-                if (i === 0) headers.push(<th key={`th-${header.field}`} className="dTableHeaderItems dTableHeaderStartItem">{header.text}</th>)
-                else if (i === (props.headers.length - 1)) headers.push(<th key={`th-${header.field}`} className="dTableHeaderItems dTableHeaderEndItem">{header.text}</th>)
-                else headers.push(<th key={`th-${header.field}`} className="dTableHeaderItems">{header.text}</th>)
+            if (props.headers.length === 1) {
+                headers.push(<th key={`th-${props.headers[0].field}`} className="dTableHeaderItems dTableHeaderOnlyItem">{props.headers[0].text}</th>)
+            } else {
+                for (let i = 0; i < props.headers.length; i++) {
+                    const header = props.headers[i];
+                    if (i === 0) headers.push(<th key={`th-${header.field}`} className="dTableHeaderItems dTableHeaderStartItem">{header.text}</th>)
+                    else if (i === (props.headers.length - 1)) headers.push(<th key={`th-${header.field}`} className="dTableHeaderItems dTableHeaderEndItem">{header.text}</th>)
+                    else headers.push(<th key={`th-${header.field}`} className="dTableHeaderItems">{header.text}</th>)
+                }
             }
 
             for (let i = 0; i < props.rows.length; i++) {
