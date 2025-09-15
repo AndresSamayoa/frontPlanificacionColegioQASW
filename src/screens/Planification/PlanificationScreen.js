@@ -22,19 +22,22 @@ export default function PlanificationScreen() {
     {field: 'acciones', text: 'Acciones'}
   ];
 
-  const evaluationHeaders = [{field: 'label', text: 'Nombre'}];
+  const evaluationHeaders = [{field: 'name', text: 'Nombre'}, {field: 'description', text: 'Comentario'}];
 
-  const resourceHeaders = [{field: 'label', text: 'Nombre'}];
+  const resourceHeaders = [{field: 'name', text: 'Nombre'}, {field: 'description', text: 'Comentario'}];
 
   const archivementHeaders = [{field: 'value', text: 'Nombre'}];
 
   const competenceHeaders = [{field: 'value', text: 'Nombre'}];
 
-  const contentHeaders = [{field: 'value', text: 'Nombre'}];
+  const contentHeaders = [{field: 'value', text: 'Nombre'}, {field: 'type', text: 'Tipo'}];
 
   const cancelForm = () => {
     setSchedual(null);
     setDate('');
+    setContentType('declarativo');
+    setResourceComment('');
+    setEvaluationComment('');
     setEvaluationList([]);
     setResourceList([]);
     setArchivementList([]);
@@ -45,17 +48,19 @@ export default function PlanificationScreen() {
   };
 
   const addEvaluation = () => {
-    if (!evaluation) return;
-    evaluationList.push({value: evaluation.value, label: evaluation.label})
+    if (!evaluation || !evaluationComment) return;
+    evaluationList.push({value: evaluation.value, label: evaluation.label + ' - ' + evaluationComment, name: evaluation.label, description: evaluationComment})
     setEvaluationList(evaluationList)
     setEvaluation(null)
+    setEvaluationComment('')
   };
 
   const addResource = () => {
-    if (!resource) return;
-    resourceList.push({value: resource.value, label: resource.label})
+    if (!resource || !resourceComment) return;
+    resourceList.push({value: resource.value, label: resource.label + ' - ' + resourceComment, name: resource.label,  description: resourceComment})
     setResourceList(resourceList)
     setResource(null)
+    setResourceComment('')
   };
 
   const addArchivement = () => {
@@ -73,10 +78,11 @@ export default function PlanificationScreen() {
   }
 
   const addContent = () => {
-    if (!content) return;
-    contentList.push({value: content, label: content})
+    if (!content || !contentType) return;
+    contentList.push({value: content, label: contentType + ' - ' + content, type: contentType})
     setContentList(contentList)
     setContent('')
+    setContentType('')
   }
 
   const removeEvaluation = () => {
@@ -166,11 +172,11 @@ export default function PlanificationScreen() {
         data: {
           horario: schedual.value,
           fecha: moment(date).format('YYYY-MM-DD'),
-          evaluaciones: evaluationList.map(e => e.value),
-          recursos: resourceList.map(e => e.value),
+          evaluaciones: evaluationList.map(e => {return {evaluacion_id: e.value, descripcion: e.description}}),
+          recursos: resourceList.map(e => {return {recurso_id_id: e.value, nombre: e.name, descripcion: e.description}}),
           logros: archivementList.map(e => e.value),
           compentence: competenceList.map(e => e.value),
-          contentList: contentList.map(e => e.value),
+          contentList: contentList.map(e => {return {tipo_contenido: e.type, descripcion: e.value}}),
         },
         validateStatus: () => true,
       });
@@ -350,6 +356,9 @@ export default function PlanificationScreen() {
   const [schedual, setSchedual] = useState(null);
   const [schedualList, setSchedualList] = useState([]);
   // array fields to add
+  const [contentType, setContentType] = useState('declarativo');
+  const [evaluationComment, setEvaluationComment] = useState('');
+  const [resourceComment, setResourceComment] = useState('');
   const [content, setContent] = useState('');
   const [compentence, setCompetence] = useState('');
   const [archivement, setArchivement] = useState('');
@@ -413,6 +422,9 @@ export default function PlanificationScreen() {
         setSchedualList={setSchedualList}
         getSchedualData={getScheduals}
         setDate={setDate}
+        setContentType={setContentType}
+        setEvaluationComment={setEvaluationComment}
+        setResourceComment={setResourceComment}
         getEvaluations={getEvaluations}
         setEvaluation={setEvaluation}
         addEvaluation={addEvaluation}
@@ -440,6 +452,9 @@ export default function PlanificationScreen() {
         schedualColumns={schedualColumns}
         schedual={schedual}
         date={date}
+        contentType={contentType}
+        evaluationComment={evaluationComment}
+        resourceComment={resourceComment}
         evaluation={evaluation}
         evaluationDel={evaluationDel}
         evaluationHeaders={evaluationHeaders}

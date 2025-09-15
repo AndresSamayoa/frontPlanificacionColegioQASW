@@ -24,6 +24,18 @@ export default function PlanificationForm(props) {
       props.setCompetence(e.target.value);
     }
 
+    const setEvaluationComment = (e) => {
+      props.setEvaluationComment(e.target.value);
+    }
+
+    const setContentType = (e) => {
+      props.setContentType(e.target.value);
+    }
+
+    const setResourceComment = (e) => {
+      props.setResourceComment(e.target.value);
+    }
+
     return <div className='planificationForm'>
         <div className="planificationInputs">
             {props.schedual && <h1>Horario: {props.schedual.label}</h1>}
@@ -46,6 +58,9 @@ export default function PlanificationForm(props) {
             <div className="controlContainer">
                 <span className="controlLabel">Evaluaciones</span>
                 <div className="inputSecundaryContainer">
+                    <input className="textInput" value={props.evaluationComment} onChange={setEvaluationComment}/>
+                </div>
+                <div className="inputSecundaryContainer">
                     <AsyncSelect loadOptions={props.getEvaluations} value={props.evaluation} onChange={props.setEvaluation} />
                     <button className="guardarBtn" onClick={props.addEvaluation}><i class="bi bi-plus-circle"></i></button>
                 </div>
@@ -60,6 +75,9 @@ export default function PlanificationForm(props) {
             />
             <div className="controlContainer">
                 <span className="controlLabel">Recursos</span>
+                <div className="inputSecundaryContainer">
+                    <input className="textInput" value={props.resourceComment} onChange={setResourceComment}/>
+                </div>
                 <div className="inputSecundaryContainer">
                     <AsyncSelect loadOptions={props.getResources} value={props.resource} onChange={props.setResource} />
                     <button className="guardarBtn" onClick={props.addResource}><i class="bi bi-plus-circle"></i></button>
@@ -105,6 +123,14 @@ export default function PlanificationForm(props) {
             />
             <div className="controlContainer">
                 <span className="controlLabel">Contenidos</span>
+                <div className="inputSecundaryContainer">
+                <span className="controlLabel">Tipo</span>
+                    <select className="textInput" onChange={setContentType} value={props.contentType}>
+                      <option value="declarativo" >declarativo</option>
+                      <option value="procedimental" >procedimental</option>
+                      <option value="actitudinal" >actitudinal</option>
+                    </select>
+                </div>
                 <div className="inputSecundaryContainer">
                     <input className="textInput" value={props.content} onChange={setContent}/>
                     <button className="guardarBtn" onClick={props.addContent}><i class="bi bi-plus-circle"></i></button>
