@@ -10,11 +10,14 @@ export default function TableModal (props) {
 
     if (props.dates && !props.param) {
         guardar_funcion = () => props.buscarData(startDate, endDate, setMensaje);
+    }else if (props.useDate && !props.param) {
+        guardar_funcion = () => props.buscarData(date, setMensaje);
     } else if (props.dates && props.param) {
         guardar_funcion = () => props.buscarData(buscador, startDate, endDate, setMensaje);
     }
 
     const [buscador, setBuscador] = useState('');
+    const [date, setDate] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [mensaje, setMensaje] = useState('');
@@ -27,6 +30,10 @@ export default function TableModal (props) {
         props.setTableData([]);
     }
 
+    console.log('date: ' + props.useDate);
+    console.log('param: ' + props.param);
+    console.log('dates: ' + props.dates);
+
     return <div className='TableModalComponent'>
         {!props.notModal && <div className='closeModalDiv'>
             <i onClick={cerrarModal} class="bi bi-x closeIcon" />
@@ -35,14 +42,17 @@ export default function TableModal (props) {
             placeHolder={props.placeHolder}
 
             dates={props.dates}
+            useDate={props.useDate}
             searcher={props.param}
 
             param={buscador}
             startDate={startDate}
             endDate={endDate}
+            date={date}
             setParam={setBuscador}
             setStartDateParam={setStartDate}
             setEndDateParam={setEndDate}
+            setDate={setDate}
 
             searchFn={guardar_funcion}
             cancelFn={clearTableData}
