@@ -33,7 +33,7 @@ export default function SchedualsScreen() {
     setUser(null);
     setCicle(null);
     setSection('');
-    setDay('');
+    setDay('lunes');
     setStartHour('');
     setEndHour('');
     setSchedualList([]);
@@ -89,13 +89,13 @@ export default function SchedualsScreen() {
         url: url,
         method: method,
         data: {
-          horainicio: startHour,
-          horafin: endHour,
+          hora_inicio: startHour,
+          hora_fin: endHour,
           dia: day,
           seccion: section.trim(),
-          usuarioid: user ? user.value : null,
-          cursoid: course ? course.value : null,
-          bloqueid: cicle ? cicle.value : null,
+          usuario_id: user ? user.value : null,
+          curso_id: course ? course.value : null,
+          bloque_id: cicle ? cicle.value : null,
         },
         validateStatus: () => true,
       });
@@ -126,7 +126,7 @@ export default function SchedualsScreen() {
       if (response.status == 200) {
         cancelForm();
         setMessageParam('Exito al eliminar');
-        await getData(param, setMessageParam, start_date, end_date);
+        await getData(param, start_date, end_date, setMessageParam);
       } else {
         setMessageParam(`Error al eliminar el horario, codigo: ${response.status}${response.data.message ? ' ' + response.data.message : ''}`);
       }
@@ -139,6 +139,10 @@ export default function SchedualsScreen() {
     try {
       const response = await HttpPetition({
         url: base_url+'/api/v1/horario/search/'+param,
+        params: {
+          fecha_inicio: start_date,
+          fecha_fin: end_date
+        },
         method: 'GET',
         validateStatus: () => true,
         timeout: 30000
@@ -148,20 +152,21 @@ export default function SchedualsScreen() {
         const data = [];
         for (const schedual of response.data) {
           data.push({
-            user: {value: schedual.ha_usuario_id, label: schedual.us_nombres},
+            user: schedual.us_nombres,
             day: schedual.ha_dia,
             start_hour: schedual.ha_hora_inicio,
             end_hour: schedual.ha_hora_fin,
-            course: {value: schedual.ha_curso_id, label: schedual.cu_nombre},
-            cicle: {value: schedual.ha_bloque_id, start_date: schedual.bl_fecha_inicio, end_date: schedual.bl_fecha_fin},
+            course: schedual.cu_nombre,
+            cicle: moment(schedual.bl_fecha_inicio).format('DD-MM-YYYY') + '/' + moment(schedual.bl_fecha_fin).format('DD-MM-YYYY'),
             acciones: <div className='ActionContainer'>
                 <i 
                   onClick={()=>{
                     setSchedualId(schedual.ha_horario_asignacion_id);
-                    setUser({value: schedual.usuario_id, label: schedual.nombres});
+                    setUser({value: schedual.ha_usuario_id, label: schedual.us_nombres});
                     setCourse({value: schedual.ha_curso_id, label: schedual.cu_nombre});
                     setCicle({value: schedual.ha_bloque_id, start_date: schedual.bl_fecha_inicio, end_date: schedual.bl_fecha_fin});
                     setDay(schedual.ha_dia);
+                    setSection(schedual.ha_seccion);
                     setStartHour(schedual.ha_hora_inicio);
                     setEndHour(schedual.ha_hora_fin);
                     setIsTableModalOpen(false);
@@ -169,7 +174,7 @@ export default function SchedualsScreen() {
                   class="bi bi-pencil-square ActionItem"
                 ></i>
                 <i
-                  onClick={()=>deleteItem(schedual.rol_id, param, start_date, end_date, setMessageParam)} 
+                  onClick={()=>deleteItem(schedual.ha_horario_asignacion_id, param, start_date, end_date, setMessageParam)} 
                   style={{color:"red"}} 
                   class="bi bi-trash ActionItem"
                 ></i>
@@ -287,7 +292,7 @@ export default function SchedualsScreen() {
   const [user, setUser] = useState(null);
   const [cicle, setCicle] = useState(null);
   const [section, setSection] = useState('');
-  const [day, setDay] = useState('');
+  const [day, setDay] = useState('lunes');
   const [startHour, setStartHour] = useState('');
   const [endHour, setEndHour] = useState('');
   const [schedualList, setSchedualList] = useState([]);

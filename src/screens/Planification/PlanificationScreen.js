@@ -7,6 +7,7 @@ import moment from 'moment';
 import PlanificationForm from "../../components/forms/PlanificationForm/PlanificationForm";
 import HttpPetition from "../../helpers/HttpPetition";
 import TableModal from "../../components/TableModal/TableModal";
+import { Link } from "react-router-dom";
 
 const base_url = process.env.REACT_APP_NODE_API_BASE;
 
@@ -18,7 +19,7 @@ export default function PlanificationScreen() {
   ];
 
   const schedualColumns = [
-    {field: 'name', text: 'Opciones'},
+    {field: 'name', text: 'Datos'},
     {field: 'acciones', text: 'Acciones'}
   ];
 
@@ -26,11 +27,11 @@ export default function PlanificationScreen() {
 
   const resourceHeaders = [{field: 'name', text: 'Nombre'}, {field: 'description', text: 'Comentario'}];
 
-  const archivementHeaders = [{field: 'value', text: 'Nombre'}];
+  const archivementHeaders = [{field: 'label', text: 'Nombre'}];
 
-  const competenceHeaders = [{field: 'value', text: 'Nombre'}];
+  const competenceHeaders = [{field: 'label', text: 'Nombre'}];
 
-  const contentHeaders = [{field: 'value', text: 'Nombre'}, {field: 'type', text: 'Tipo'}];
+  const contentHeaders = [{field: 'description', text: 'Nombre'}, {field: 'type', text: 'Tipo'}];
 
   const cancelForm = () => {
     setSchedual(null);
@@ -51,19 +52,20 @@ export default function PlanificationScreen() {
     let body = {};
     switch (type) {
       case 'contenidos':
-        body = {descripcion: data.description, tipo: data.type};
+        body = {descripcion: data.descripcion, tipo: data.tipo};
+        console.log(body, data)
         break;
       case 'competencias':
-        body = {descripcion: data.description};
+        body = {descripcion: data.descripcion};
         break;
       case 'indicadores':
-        body = {descripcion: data.description};
+        body = {descripcion: data.descripcion};
         break;
       case 'evaluaciones':
-        body = {evaluacion_id: data.id, descripcion: data.description};
+        body = {evaluacion_id: data.evaluacion_id, descripcion: data.descripcion};
         break;
       case 'recursos':
-        body = {recurso_id: data.id, descripcion: data.description};
+        body = {recurso_id: data.recurso_id, descripcion: data.descripcion};
         break;
       default:
         break;
@@ -72,7 +74,10 @@ export default function PlanificationScreen() {
       const response = await HttpPetition({
         url: base_url + '/api/v1/planificacion/' + planificationId + '/detalle',
         method: 'POST',
-        data: {...body, tipo: type},
+        data: {
+          pdatos: body, 
+          ptipo: type
+        },
         validateStatus: () => true,
       });
 
@@ -128,7 +133,8 @@ export default function PlanificationScreen() {
 
   const addResource = () => {
     if (!resource || !resourceComment) return;
-    if (planificationId > 0) return addDetail({recurso_id: evaluation.value, descripcion: evaluationComment}, 'recursos', () => {setResource(null); setResourceComment('');});
+    if (planificationId > 0) return addDetail({recurso_id: resource.value, descripcion: resourceComment}, 'recursos', () => {setResource(null); setResourceComment('');});
+    console.log(resource)
     resourceList.push({value: resource.value, label: resource.label + ' - ' + resourceComment, name: resource.label,  description: resourceComment})
     setResourceList(resourceList)
     setResource(null)
@@ -154,7 +160,7 @@ export default function PlanificationScreen() {
   const addContent = () => {
     if (!content || !contentType) return;
     if (planificationId > 0) return addDetail({tipo: contentType, descripcion: content}, 'contenidos', () => {setContent(''); setContentType('declarativo');});
-    contentList.push({value: content, label: contentType + ' - ' + content, type: contentType})
+    contentList.push({value: content, label: contentType + ' - ' + content, type: contentType, description: content})
     setContentList(contentList)
     setContent('')
     setContentType('declarativo')
@@ -173,7 +179,7 @@ export default function PlanificationScreen() {
 
   const removeResource = () => {
     if (!resourceDel) return;
-    if (planificationId > 0) return removeDetail(evaluationDel.value, 'recursos', () => {setResourceDel(null)});
+    if (planificationId > 0) return removeDetail(resourceDel.value, 'recursos', () => {setResourceDel(null)});
     const data = [];
     for (const itm of resourceList) {
       if (itm.value !== resourceDel.value) data.push(itm);
@@ -184,7 +190,7 @@ export default function PlanificationScreen() {
 
   const removeArchivement = () => {
     if (!archivementDel) return;
-    if (planificationId > 0) return removeDetail(evaluationDel.value, 'indicadores', () => {setArchivementDel(null)});
+    if (planificationId > 0) return removeDetail(archivementDel.value, 'indicadores', () => {setArchivementDel(null)});
     const data = [];
     for (const itm of archivementList) {
       if (itm.value !== archivementDel.value) data.push(itm);
@@ -195,7 +201,7 @@ export default function PlanificationScreen() {
 
   const removeCompetence = () => {
     if (!compentenceDel) return;
-    if (planificationId > 0) return removeDetail(evaluationDel.value, 'competencias', () => {setCompetenceDel(null)});
+    if (planificationId > 0) return removeDetail(compentenceDel.value, 'competencias', () => {setCompetenceDel(null)});
     const data = [];
     for (const itm of competenceList) {
       if (itm.value !== compentenceDel.value) data.push(itm);
@@ -206,7 +212,7 @@ export default function PlanificationScreen() {
 
   const removeContent = () => {
     if (!contentDel) return;
-    if (planificationId > 0) return removeDetail(evaluationDel.value, 'contenidos', () => {setContentList(data)});
+    if (planificationId > 0) return removeDetail(contentDel.value, 'contenidos', () => {setContentDel(null)});
     const data = [];
     for (const itm of contentList) {
       if (itm.value !== contentDel.value) data.push(itm);
@@ -250,13 +256,16 @@ export default function PlanificationScreen() {
         url: url,
         method: method,
         data: {
+          tipo: 'dia',
           horario: schedual.value,
+          fecha_inicio: null,
+          fecha_fin: null,
           fecha: moment(date).format('YYYY-MM-DD'),
           evaluaciones: evaluationList.map(e => {return {evaluacion_id: e.value, descripcion: e.description}}),
-          recursos: resourceList.map(e => {return {recurso_id_id: e.value, nombre: e.name, descripcion: e.description}}),
+          recursos: resourceList.map(e => {return {recurso_id: e.value, nombre: e.name, descripcion: e.description}}),
           logros: archivementList.map(e => e.value),
-          compentence: competenceList.map(e => e.value),
-          contentList: contentList.map(e => {return {tipo_contenido: e.type, descripcion: e.value}}),
+          competencias: competenceList.map(e => e.value),
+          contenidos: contentList.map(e => {return {tipo_contenido: e.type, descripcion: e.value}}),
         },
         validateStatus: () => true,
       });
@@ -279,7 +288,7 @@ export default function PlanificationScreen() {
   const deleteItem = async (planificationId, date, setMessageParam) => {
     try {
       const response = await HttpPetition({
-        url: base_url + '/api/v1/planificaciones/' + planificationId,
+        url: base_url + '/api/v1/planificacion/' + planificationId,
         method: 'DELETE',
         validateStatus: () => true
       });
@@ -299,7 +308,7 @@ export default function PlanificationScreen() {
   const getData = async (date, setMessageParam) => {
     try {
       const response = await HttpPetition({
-        url: base_url+'/api/v1/planificaciones/search/'+date,
+        url: base_url+'/api/v1/planificacion/day/'+date,
         method: 'GET',
         validateStatus: () => true,
         timeout: 30000
@@ -317,8 +326,8 @@ export default function PlanificationScreen() {
           for (const evalu of planification.evaluaciones) {
             evaluations.push({
               value: evalu.id,
-              label: evalu.recurso + ' - ' + evalu.descripcion,
-              name: evalu.recurso,
+              label: evalu.evaluacion + ' - ' + evalu.descripcion,
+              name: evalu.evaluacion,
               description: evalu.descripcion
             });
           }
@@ -354,16 +363,18 @@ export default function PlanificationScreen() {
               value: conte.id,
               label: conte.descripcion + ' ' + conte.tipo,
               description: conte.descripcion,
+              type: conte.tipo,
             });
           }
 
           data.push({
-            schedual: {value: planification.ha_usuario_id, label: planification.us_nombres},
-            date: planification.ha_dia,
+            schedual: planification.nombre + ', Sec. ' + planification.seccion,
+            date: moment(planification.fecha).format('DD-MM-YYYY'),
             acciones: <div className='ActionContainer'>
                 <i 
                   onClick={()=>{
-                    setSchedual({label: `${planification.nombre} Sec. ${planification.ha_seccion}, ${planification.dia} ${planification.hora_inicio}-${planification.hora_fin}`})
+                    setPlanificationId(planification.planificacion_id)
+                    setSchedual({label: `${planification.nombre} Sec. ${planification.seccion}, ${planification.dia} ${planification.hora_inicio}-${planification.hora_fin}`})
                     setDate(planification.fecha);
                     setEvaluationList(evaluations);
                     setResourceList(resources);
@@ -375,15 +386,20 @@ export default function PlanificationScreen() {
                   class="bi bi-pencil-square ActionItem"
                 ></i>
                 <i
-                  onClick={()=>deleteItem(planification.rol_id, date, setMessageParam)} 
+                  onClick={()=>deleteItem(planification.planificacion_id, date, setMessageParam)} 
                   style={{color:"red"}} 
                   class="bi bi-trash ActionItem"
                 ></i>
+                <Link to={'/planification/detail/'+planification.planificacion_id}><i
+                  style={{color:"green"}} 
+                  class="bi bi-eye ActionItem"
+                ></i>
+                </Link>
             </div>
           });
         }
 
-        setSchedualList(data);
+        setPlanificationList(data);
       } else {
         setMessageParam(`Error al obtener los datos de la tabla, codigo: ${response.status}${response.data.message ? ' ' + response.data.message : ''}`);
       }
@@ -395,7 +411,7 @@ export default function PlanificationScreen() {
   const getPlanification = async () => {
     try {
       const response = await HttpPetition({
-        url: base_url+'/api/v1/planificaciones/'+planificationId,
+        url: base_url+'/api/v1/planificacion/'+planificationId,
         method: 'GET',
         validateStatus: () => true,
         timeout: 30000
@@ -413,8 +429,8 @@ export default function PlanificationScreen() {
         for (const evalu of planification.evaluaciones) {
           evaluations.push({
             value: evalu.id,
-            label: evalu.recurso + ' - ' + evalu.descripcion,
-            name: evalu.recurso,
+            label: evalu.evaluacion + ' - ' + evalu.descripcion,
+            name: evalu.evaluacion,
             description: evalu.descripcion
           });
         }
@@ -450,6 +466,7 @@ export default function PlanificationScreen() {
             value: conte.id,
             label: conte.descripcion + ' ' + conte.tipo,
             description: conte.descripcion,
+            type: conte.tipo,
           });
         }
 
@@ -469,11 +486,11 @@ export default function PlanificationScreen() {
   const getScheduals = async (start_date, end_date) => {
     try {
       const response = await HttpPetition({
-        url: base_url+'/api/v1/asignacion/usuario/'+localStorage.getItem('userId'),
+        url: base_url+'/api/v1/horario/'+localStorage.getItem('userId'),
         method: 'GET',
-        param: {
-          fechainicio: moment(start_date).format('YYYY-MM-DD'),
-          fechafin: moment(end_date).format('YYYY-MM-DD'),
+        params: {
+          fecha_inicio: moment(start_date).format('YYYY-MM-DD'),
+          fecha_fin: moment(end_date).format('YYYY-MM-DD'),
         },
         validateStatus: () => true,
         timeout: 30000
@@ -482,6 +499,7 @@ export default function PlanificationScreen() {
       if (response.status == 200) {
         const data = [];
         for (const schedual of response.data) {
+          console.log(schedual)
           data.push({
             name:  `${schedual.cu_nombre} Sec. ${schedual.ha_seccion}, ${schedual.ha_dia} ${schedual.ha_hora_inicio}-${schedual.ha_hora_fin}`,
             acciones: <div className='ActionContainer'>
@@ -490,13 +508,13 @@ export default function PlanificationScreen() {
                     setSchedualList([])
                     setSchedual({value: schedual.ha_horario_asignacion_id, label:  `${schedual.cu_nombre} Sec. ${schedual.ha_seccion}, ${schedual.ha_dia} ${schedual.ha_hora_inicio}-${schedual.ha_hora_fin}`});
                   }} 
-                  class="bi bi-pencil-square ActionItem"
+                  class="bi bi-check2-circle ActionItem"
                 ></i>
             </div>
           });
         }
 
-        return data;
+        setSchedualList(data);
       } else {
         setMensaje(`Error al obtener los datos de los horarios, codigo: ${response.status}${response.data.message ? ' ' + response.data.message : ''}`);
       }
@@ -515,11 +533,10 @@ export default function PlanificationScreen() {
       });
 
       if (response.status == 200) {
-        console.log(response)
         const data = [];
         for (const resource of response.data) {
           data.push({
-            value: resource.recurso_id,
+            value: resource.re_recurso_id,
             label: resource.re_nombre,
           });
         }
@@ -587,13 +604,6 @@ export default function PlanificationScreen() {
   const [archivementList, setArchivementList] = useState([]);
   const [evaluationList, setEvaluationList] = useState([]);
   const [resourceList, setResourceList] = useState([]);
-  // array fields added
-  const [contentSelect, setContentSelect] = useState([]);
-  const [compentenceSelect, setCompetenceSelect] = useState([]);
-  const [archivementSelect, setArchivementSelect] = useState([]);
-  const [evaluationSelect, setEvaluationSelect] = useState([]);
-  const [resourceSelect, setResourceSelect] = useState([]);
-  const [planificationSelect, setPlanificationSelect] = useState([]);
   // screen data
   const [planificationList, setPlanificationList] = useState([]);
   const [mensaje, setMensaje] = useState("");
@@ -616,7 +626,7 @@ export default function PlanificationScreen() {
 
           useDate={true}
 
-          setTableData={setSchedualList}
+          setTableData={setPlanificationList}
           buscarData={getData}
 
           placeHolder='Nombre'

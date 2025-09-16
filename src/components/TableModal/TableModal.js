@@ -30,10 +30,6 @@ export default function TableModal (props) {
         props.setTableData([]);
     }
 
-    console.log('date: ' + props.useDate);
-    console.log('param: ' + props.param);
-    console.log('dates: ' + props.dates);
-
     return <div className='TableModalComponent'>
         {!props.notModal && <div className='closeModalDiv'>
             <i onClick={cerrarModal} class="bi bi-x closeIcon" />
@@ -52,7 +48,7 @@ export default function TableModal (props) {
             setParam={setBuscador}
             setStartDateParam={setStartDate}
             setEndDateParam={setEndDate}
-            setDate={setDate}
+            setDateParam={setDate}
 
             searchFn={guardar_funcion}
             cancelFn={clearTableData}

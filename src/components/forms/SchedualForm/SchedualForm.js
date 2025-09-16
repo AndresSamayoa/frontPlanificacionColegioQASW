@@ -58,13 +58,13 @@ export default function SchedualForm(props) {
                 <span className="controlLabel">Dias</span>
                 <div className="inputSecundaryContainer">
                     <select className="textInput" onChange={setDay} value={props.day}>
-                      <option value="director" >lunes</option>
-                      <option value="coordinador" >martes</option>
-                      <option value="maestro" >miercoles</option>
-                      <option value="maestro" >jueves</option>
-                      <option value="maestro" >viernes</option>
-                      <option value="maestro" >sabado</option>
-                      <option value="maestro" >domingo</option>
+                      <option value="lunes" >lunes</option>
+                      <option value="martes" >martes</option>
+                      <option value="miercoles" >miercoles</option>
+                      <option value="jueves" >jueves</option>
+                      <option value="viernes" >viernes</option>
+                      <option value="sabado" >sabado</option>
+                      <option value="domingo" >domingo</option>
                     </select>
                 </div>
             </div>
