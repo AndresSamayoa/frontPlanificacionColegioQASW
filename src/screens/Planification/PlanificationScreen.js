@@ -14,6 +14,7 @@ const base_url = process.env.REACT_APP_NODE_API_BASE;
 export default function PlanificationScreen() {
   const tableColumns = [
     {field: 'schedual', text: 'Horario'},
+    {field: 'approved', text: 'Estado'},
     {field: 'date', text: 'Fecha'},
     {field: 'acciones', text: 'Acciones'}
   ];
@@ -369,6 +370,7 @@ export default function PlanificationScreen() {
 
           data.push({
             schedual: planification.nombre + ', Sec. ' + planification.seccion,
+            approved: planification.aprobado ? 'Aprobada' : planification.aprobado === null ? 'Pendiente': 'Rechazada',
             date: moment(planification.fecha).format('DD-MM-YYYY'),
             acciones: <div className='ActionContainer'>
                 <i 

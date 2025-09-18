@@ -39,19 +39,21 @@ export default function ApprovePlanificationScreen() {
       }
 
       const response = await HttpPetition({
-        url: base_url + '/api/v1/planificacion/'+resourceId+'/'+action,
-        method: 'PUT',
+        url: base_url + '/api/v1/planificacion/'+action+'/'+planificationId,
+        method: 'POST',
         data: {
-          comentario: comment.trim(),
+          pcomentario: comment.trim(),
+          pusuario_id: localStorage.getItem('userId'),
         },
         validateStatus: () => true,
       });
       if (response.status == 200) {
         cancelForm();
+        getDetails();
         setMensaje("Exito al guardar");
       } else {
         setMensaje(
-          `No se pudo guardar la evaluación, codigo: ${response.status}${
+          `No se pudo actualizar la planificacion, codigo: ${response.status}${
             response.data.message ? " " + response.data.message : ""
           }`
         );
@@ -64,7 +66,7 @@ export default function ApprovePlanificationScreen() {
   const getDetails = async () => {
     try {
       const response = await HttpPetition({
-        url: base_url+'/api/v1/planificaciones/'+planificationId,
+        url: base_url+'/api/v1/planificacion/'+planificationId,
         method: 'GET',
         validateStatus: () => true,
         timeout: 30000
@@ -82,7 +84,7 @@ export default function ApprovePlanificationScreen() {
         const contents = [];
 
         for (const evalu of planification.evaluaciones) {
-          evaluations.push(evalu.recurso + ' - ' + evalu.descripcion);
+          evaluations.push(evalu.evaluacion + ' - ' + evalu.descripcion);
         }
 
         for (const reso of planification.recursos) {
@@ -98,7 +100,7 @@ export default function ApprovePlanificationScreen() {
         }
 
         for (const conte of planification.contenidos) {
-          contents.push(conte.descripcion + ' ' + conte.tipo);
+          contents.push(conte.descripcion + ', tipo: ' + conte.tipo);
         }
 
         const generalDetails = [evaluations, resources, archivements, competences, contents];
@@ -109,17 +111,19 @@ export default function ApprovePlanificationScreen() {
 
         for (let i = 0; i < maxLength; i++) {
           data.push({
-            evaluations: evaluations[i] || '',
-            resources: resources[i] || '',
-            archivements: archivements[i] || '',
-            competences: competences[i] || '',
-            content: content[i] || ''
+            evaluations: evaluations[i] || '-',
+            resources: resources[i] || '-',
+            archivements: archivements[i] || '-',
+            competences: competences[i] || '-',
+            content: contents[i] || '-'
           });
         }
 
         setPlanificationData({
-          title: `${planification.nombre} ${planification.fecha_inicio}-${planification.fecha_fin}: ${planification.fecha}`,
-          approved
+          title: `${planification.nombre} ${planification.hora_inicio}-${planification.hora_fin}: ${planification.fecha}`,
+          approved: planification.aprobado,
+          approvedBy: planification.usuario_aprobacion,
+          comment: planification.comentario || null
         })
         setDetails(data);
       } else {
@@ -131,11 +135,11 @@ export default function ApprovePlanificationScreen() {
   };
 
   const [planificationData, setPlanificationData] = useState({});
-  const [details, setDetails] = useState([])
-  const [comment, setComment] = useState([])
+  const [details, setDetails] = useState([]);
+  const [comment, setComment] = useState([]);
   const [mensaje, setMensaje] = useState("");
 
-  useEffect(() => {getDetails}, []);
+  useEffect(() => {getDetails()}, []);
 
   return (
     <div className="ApprovePlanificationScreen">
@@ -147,14 +151,23 @@ export default function ApprovePlanificationScreen() {
           headers={tableColumns}
           rows={details}
         />
+        <h3>Estado: {planificationData.approved ? 'Aprobada' : planificationData.approved === null ? 'Pendiente': 'Rechazada'}</h3>
+        {planificationData.approved !== null && <h3>Aprobacion por {planificationData.approvedBy}</h3>}
+        {planificationData.comment && <><div className="TitleContainer">
+          <h1>Commentario</h1>
+        </div>
+        <div className='messageContainer'>
+            <p style={{"max-width": '75%'}}>{planificationData.comment}</p>
+        </div></>}
         <div className="controlContainer">
           <div className="inputSecundaryContainer">
+              <label>Comentario</label>
               <input className="textInput" value={comment} onChange={(e)=> {setComment(e.target.value)}}/>
           </div>
           
         </div>
         <div className='messageContainer'>
-            <p style={{width: '75%'}}>{mensaje}</p>
+            <p style={{"max-width": '75%'}}>{mensaje}</p>
         </div>
         <div className="planificationFormControls">
             <button className="guardarBtn" onClick={() => approve('aprobar')}>Aprobar</button>
