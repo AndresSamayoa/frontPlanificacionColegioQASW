@@ -182,7 +182,7 @@ export default function RolsScreen() {
   return (
     <div className="RolScreen">
       <div className="TitleContainer">
-        <h1>Asignaciones</h1>
+        <h1>Roles</h1>
         <i class="bi bi-search openModal" onClick={()=> setIsTableModalOpen(true)}/>
       </div>
       <Modal 
