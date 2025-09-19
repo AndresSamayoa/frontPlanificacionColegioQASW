@@ -62,8 +62,8 @@ export default function AssignationsScreen() {
         url: url,
         method: method,
         data: {
-          gradoid: schoolYear ? schoolYear.value : null,
-          usuarioid: user ? user.value : null,
+          grado_id: schoolYear ? schoolYear.value : null,
+          usuario_id: user ? user.value : null,
         },
         validateStatus: () => true,
       });

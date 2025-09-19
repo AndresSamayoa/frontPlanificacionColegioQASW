@@ -37,10 +37,10 @@ export default function RolsScreen() {
 
       if (rolId > 0) {
           method = 'PUT';
-          url = base_url + '/api/v1/asignacion/'+rolId
+          url = base_url + '/api/v1/rol/'+rolId
       } else {
           method = 'POST';
-          url = base_url + '/api/v1/asignacion'
+          url = base_url + '/api/v1/rol'
       }
 
       if (rolId == 0 && (!rolType || rolType.length < 1)) {
@@ -60,8 +60,8 @@ export default function RolsScreen() {
         url: url,
         method: method,
         data: {
-          rol: rolType,
-          usuarioid: user ? user.value : null,
+          tipo: rolType,
+          usuario_id: user ? user.value : null,
         },
         validateStatus: () => true,
       });
@@ -84,7 +84,7 @@ export default function RolsScreen() {
   const deleteItem = async (rolId, param, setMessageParam) => {
     try {
       const response = await HttpPetition({
-        url: base_url + '/api/v1/asignacion/' + rolId,
+        url: base_url + '/api/v1/rol/' + rolId,
         method: 'DELETE',
         validateStatus: () => true
       });
@@ -104,7 +104,7 @@ export default function RolsScreen() {
   const getData = async (param, setMessageParam) => {
     try {
       const response = await HttpPetition({
-        url: base_url+'/api/v1/asignacion/search/'+param,
+        url: base_url+'/api/v1/rol/search/'+param,
         method: 'GET',
         validateStatus: () => true,
         timeout: 30000
