@@ -173,7 +173,7 @@ export default function RolsScreen() {
   };
 
   const [rolId, setRolId] = useState(0);
-  const [rolType, setRolType] = useState('');
+  const [rolType, setRolType] = useState('director');
   const [user, setUser] = useState(null);
   const [rolList, setRolList] = useState([]);
   const [mensaje, setMensaje] = useState("");

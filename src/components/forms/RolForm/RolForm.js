@@ -10,7 +10,7 @@ export default function RolForm(props) {
     return <div className='rolForm'>
         <div className="rolInputs">
             <div className="controlContainer">
-                <span className="controlLabel">Grado</span>
+                <span className="controlLabel">Rol</span>
                 <div className="inputSecundaryContainer">
                     <select className="textInput" onChange={setRol} value={props.rol}>
                       <option value="director" >director</option>
