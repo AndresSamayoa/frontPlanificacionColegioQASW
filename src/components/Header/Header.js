@@ -1,8 +1,24 @@
+import HttpPetition from '../../helpers/HttpPetition';
 import './Header.css';
 
 import { Link } from 'react-router-dom';
 
+const base_url = process.env.REACT_APP_NODE_API_BASE;
+
 export default function Header () {
+
+    const logout = () => {
+        HttpPetition({
+            url: base_url + '/api/v1/logout',
+            method: 'DELETE',
+            validateStatus: () => true,
+        });
+
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        window.location.assign('/')
+    }
+
     return <div className='headerContainer'>
         <div className='headerLogoContainer'>
             <h1 className='headerTitle'>Planificaciónes</h1>
@@ -18,6 +34,9 @@ export default function Header () {
             <Link to='/rol/crud' className='headerLink'><b>Roles</b></Link>
             <Link to='/schedual/crud' className='headerLink'><b>Horarios</b></Link>
             <Link to='/planification/crud' className='headerLink'><b>Planificaciónes</b></Link>
+        </div>
+        <div className='headerLogoContainer'>
+            <h1 className='headerLogout' onClick={logout}>Cerrar sesión</h1>
         </div>
     </div>
 }

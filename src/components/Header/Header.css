@@ -22,6 +22,11 @@
   font-size: 100%;
 }
 
+.headerLogout {
+  font-size: 100%;
+  cursor: pointer;
+}
+
 .headerLinks {
   width: 75%;
   display: flex;
