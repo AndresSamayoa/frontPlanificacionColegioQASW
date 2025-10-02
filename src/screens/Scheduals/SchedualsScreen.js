@@ -303,7 +303,7 @@ export default function SchedualsScreen() {
   return (
     <div className="SchedualScreen">
       <div className="TitleContainer">
-        <h1>Asignaciones</h1>
+        <h1>Horarios</h1>
         <i class="bi bi-search openModal" onClick={()=> setIsTableModalOpen(true)}/>
       </div>
       <Modal 
