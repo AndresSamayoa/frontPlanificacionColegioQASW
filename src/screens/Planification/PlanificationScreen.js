@@ -35,6 +35,7 @@ export default function PlanificationScreen() {
   const contentHeaders = [{field: 'description', text: 'Nombre'}, {field: 'type', text: 'Tipo'}];
 
   const cancelForm = () => {
+    setPlanificationId(0);
     setSchedual(null);
     setDate('');
     setContentType('declarativo');
@@ -670,6 +671,7 @@ export default function PlanificationScreen() {
         removeContent={removeContent}
         addContent={addContent}
 
+        planificationId={planificationId}
         schedualList={schedualList}
         schedualColumns={schedualColumns}
         schedual={schedual}

@@ -149,7 +149,7 @@ export default function PlanificationForm(props) {
                 <p style={{width: '75%'}}>{props.mensaje}</p>
         </div>
         <div className="planificationFormControls">
-            <button className="guardarBtn" onClick={props.guardarFn}><i class="bi bi-floppy"></i></button>
+            {props.planificationId < 1 && <button className="guardarBtn" onClick={props.guardarFn}><i class="bi bi-floppy"></i></button>}
             <button className="cancelarBtn" onClick={props.cancelarFn}><i class="bi bi-x-lg"></i></button>
         </div>
     </div>
